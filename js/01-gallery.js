@@ -32,7 +32,6 @@ let modal = "";
 
 function galleryItemOpen(e) {
   e.preventDefault();
-  window.addEventListener("keydown", closeByEsc);
   if (!e.target.classList.contains("gallery__image")) {
     return;
   }
@@ -41,22 +40,23 @@ function galleryItemOpen(e) {
   modal = basicLightbox.create(`
       <div class="modal">
           <img src="${currentImg}" >
-      </div>
-  `);
+      </div>`,
+    {
+      onShow: () => window.addEventListener("keydown", closeByEsc),
+      onClose: () => window.removeEventListener("keydown", closeByEsc),
+    }
+  );
   modal.show();
 }
 
 function closeByModalClick(e) {
   if (e.target.closest(".modal")) {
     modal.close();
-    window.removeEventListener("keydown", closeByEsc);
   }
 }
 
 function closeByEsc(e) {
   if (e.code === "Escape") {
     modal.close();
-    window.removeEventListener("keydown", closeByEsc);
   }
-  console.log(e);
 }
